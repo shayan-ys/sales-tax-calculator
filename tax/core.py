@@ -1,5 +1,4 @@
-from decimal import ROUND_UP, ROUND_DOWN
-from decimal import Decimal
+from decimal import Decimal, ROUND_UP, ROUND_DOWN
 
 
 class Tax:

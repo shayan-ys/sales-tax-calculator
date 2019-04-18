@@ -20,7 +20,8 @@ class Product:
         # negative prices are not abstracted, to let app use negative amounts for returned products
         self.price = price
         self.save_tax()
-        self.cost = self.price + self.tax_amount
+        cost = self.price + self.tax_amount
+        self.cost = float("{0:.2f}".format(cost))
 
     def save_tax(self):
         """Calculate and save tax_amount using product's tax processor, and based on its price
@@ -36,10 +37,10 @@ class Product:
         """
         if imported:
             # change Domestic -> Imported tax type based on the product type
-            if isinstance(self.tax_profile, tax.categories.BasicDomestic):
+            if self.tax_profile == tax.categories.BasicDomestic:
                 # Basic product
                 self.tax_profile = tax.categories.BasicImported
-            elif isinstance(self.tax_profile, tax.categories.ExemptDomestic):
+            elif self.tax_profile == tax.categories.ExemptDomestic:
                 # Exempt product
                 self.tax_profile = tax.categories.ExemptImported
 

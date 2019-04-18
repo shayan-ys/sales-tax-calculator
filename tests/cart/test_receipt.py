@@ -86,5 +86,66 @@ class TestReceipt(unittest.TestCase):
         self.assertEqual(216.45, receipt_2.total_cost)
 
 
+class TestReceiptPrint(unittest.TestCase):
+
+    def test_receipt_str(self):
+        book = Book(12.49)
+        music_cd = Basic(14.99, name='music CD')
+        chocolate = Food(0.85, name='chocolate bar')
+
+        receipt_1 = Receipt()
+        receipt_1.add(book)
+        receipt_1.add(music_cd)
+        receipt_1.add(chocolate)
+
+        expected = "1 book: 12.49\n1 music CD: 16.49\n1 chocolate bar: 0.85\nSales Taxes: 1.50\nTotal: 29.83"
+        self.assertEqual(expected, str(receipt_1))
+
+        receipt_empty = Receipt()
+        expected = "\nSales Taxes: 0.00\nTotal: 0.00"
+        self.assertEqual(expected, str(receipt_empty))
+
+    def test_receipt_dict(self):
+        book = Book(12.49)
+        music_cd = Basic(14.99, name='music CD')
+        chocolate = Food(0.85, name='chocolate bar')
+
+        receipt_1 = Receipt()
+        receipt_1.add(book)
+        receipt_1.add(music_cd)
+        receipt_1.add(chocolate)
+
+        expected = {
+            'items': [
+                {'cost': 12.49,
+                 'count': 1,
+                 'imported': False,
+                 'product': 'book',
+                 'tax': 0.0},
+                {'cost': 16.49,
+                 'count': 1,
+                 'imported': False,
+                 'product': 'music CD',
+                 'tax': 1.5},
+                {'cost': 0.85,
+                 'count': 1,
+                 'imported': False,
+                 'product': 'chocolate bar',
+                 'tax': 0.0}
+            ],
+            'total cost': 29.83,
+            'total sale taxes': 1.5
+        }
+        self.assertEqual(expected, receipt_1.__dict__())
+
+        receipt_empty = Receipt()
+        expected = {
+            'items': [],
+            'total cost': 0,
+            'total sale taxes': 0
+        }
+        self.assertEqual(expected, receipt_empty.__dict__())
+
+
 if __name__ == '__main__':
     unittest.main()

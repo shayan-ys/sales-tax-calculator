@@ -3,6 +3,7 @@ from .item import Item
 
 # 1st party
 from product.core import Product
+import constant
 
 # 3rd party
 from typing import List
@@ -13,6 +14,11 @@ class Receipt:
     # automatic values
     total_tax_amount = 0.0  # type: float
     total_cost = 0.0        # type: float
+
+    def __init__(self):
+        self.items = []
+        self.total_tax_amount = 0.0
+        self.total_cost = 0.0
 
     def add(self, product: Product, count: int = 1):
         """Add product to list of receipt items
@@ -34,3 +40,18 @@ class Receipt:
         # update total cost
         total_cost = self.total_cost + (product.cost * count)
         self.total_cost = float("{0:.2f}".format(total_cost))
+
+    def __str__(self):
+        items_str = '\n'.join(map(str, self.items))
+        return "{0}\n{1}: {2:.2f}\n{3}: {4:.2f}".format(
+            items_str,
+            constant.Strings.SALES_TAXES, self.total_tax_amount,
+            constant.Strings.TOTAL, self.total_cost
+        )
+
+    def __dict__(self):
+        return {
+            'items': list(map(dict, self.items)),
+            'total sale taxes': self.total_tax_amount,
+            'total cost': self.total_cost
+        }

@@ -41,6 +41,7 @@ class TestProductCategories(unittest.TestCase):
         self.assertEqual(11.50, Basic(10.0, imported=True).cost)
         self.assertEqual(11.50, Basic(10.00001, imported=True).cost)
         self.assertEqual(11.55, Basic(10.001, imported=True).cost)
+        self.assertEqual(-11.50, Basic(-10.0, imported=True).cost)
 
 
 if __name__ == '__main__':

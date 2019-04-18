@@ -1,5 +1,4 @@
 import unittest
-import sys
 from tax.core import Tax
 
 
@@ -31,6 +30,11 @@ class TestTaxCore(unittest.TestCase):
         default_tax.basic_tax = 10
         default_tax.import_duty = 5
         self.assertEqual(7.15, default_tax.calculate_sale_tax(47.5))
+        # extreme conditions
+        self.assertEqual(0, default_tax.calculate_sale_tax(0))
+        self.assertEqual(0, default_tax.calculate_sale_tax(0.0000000000001))
+        self.assertEqual(0.05, default_tax.calculate_sale_tax(0.1))
+        self.assertEqual(-0.15, default_tax.calculate_sale_tax(-1))
 
 
 if __name__ == '__main__':

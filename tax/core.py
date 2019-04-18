@@ -1,4 +1,4 @@
-from decimal import ROUND_UP
+from decimal import ROUND_UP, ROUND_DOWN
 from decimal import Decimal
 
 
@@ -13,16 +13,16 @@ class Tax:
         :var basic_tax (int): basic sales tax, applicable at a rate of 10% on all goods,
             except books, food, and medical products, which are exempt.
             written in format of n%, therefore saving as integers. e.g., 10% tax -> basic_tax = 10.
-            Default to 10.
+            Default to 0.
         :var import_duty (int): Import duty is an additional sales tax applicable on all imported goods at a rate of 5%,
             with no exemptions.
             written in format of n%, therefore saving as integers. e.g., 5% tax -> import_duty = 5.
-            Default to 5.
+            Default to 0.
     """
 
     # tax percentages (basic tax: 5%, import duty: 10%)
-    basic_tax = 10      # type: int
-    import_duty = 5     # type: int
+    basic_tax = 0      # type: int
+    import_duty = 0    # type: int
 
     @staticmethod
     def round_up_05(amount: float) -> float:
@@ -37,7 +37,11 @@ class Tax:
         :param float amount: raw, not rounded number
         :return: amount rounded up to the nearest 0.05
         """
-        return float(Decimal(amount * 2).quantize(Decimal('.1'), rounding=ROUND_UP) / 2)
+        # return float(Decimal(amount * 2).quantize(Decimal('.1'), rounding=ROUND_UP) / 2)
+        # had an imprecision with 0.1 * 2 = 0.200000000000011 which would've round up to 0.3 therefore wrong result 0.15
+        return float(Decimal(amount * 2)
+                     .quantize(Decimal('.00001'), rounding=ROUND_DOWN)
+                     .quantize(Decimal('.1'), rounding=ROUND_UP) / 2)
 
     def calculate_sale_tax(self, price: float) -> float:
         """Calculate final tax for a given product price

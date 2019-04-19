@@ -3,7 +3,7 @@ from .item import Item
 
 # 1st party
 from product.core import Product
-from product.categories import category_identifier, category_obj_by_name
+from product.categories import category_identifier, category_class_by_name
 import constant
 
 # 3rd party
@@ -51,7 +51,7 @@ class Receipt:
         """
         for count, imported, name, category_str, price in items_data:
             if category_str:
-                category = category_obj_by_name(category_str=category_str)
+                category = category_class_by_name(category_str=category_str)
             else:
                 category = category_identifier(product_title=name)
             product = category(price=price, imported=imported, name=name)

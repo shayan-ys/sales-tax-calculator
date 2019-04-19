@@ -10,8 +10,6 @@ class TestParser(unittest.TestCase):
                          parse_item("1 imported box of chocolates at 10.00"))
         self.assertEqual((1, False, "night at museum book", 25.5),
                          parse_item("1 night at museum book at 25.5"))
-        self.assertEqual((1, False, "how imported cars changed the car industry in US", 15.24),
-                         parse_item("1 how imported cars changed the car industry in US at 15.24"))
 
         # extreme conditions
         # TODO: self.assertEqual((), parse_item(""))

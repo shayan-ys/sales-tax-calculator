@@ -2,7 +2,7 @@ import constant
 # 1 imported bottle of perfume at 47.50
 
 
-def parse_item(raw: str) -> (int, bool, str, float):
+def parse_item(raw: str) -> (int, bool, str, str, float):
     """Parse shopping list input strings to get count, imported or not, name of item and item's price
     Example:
         (1, True, "bottle of perfume", 47.50) = parse_item("1 imported bottle of perfume at 47.50")
@@ -46,19 +46,44 @@ def parse_item(raw: str) -> (int, bool, str, float):
     # reason: split returns array of at least length 1. max split is set to 1, so array's max length is 2
     raw_import_title = count_n_raw[-1].strip()
 
-    if raw_import_title.startswith(constant.Strings.IMPORTED):
+    if constant.Strings.IMPORTED in raw_import_title:
         imported = True
 
-        # split first occurrence of word "imported"
-        # note: item title may have word "imported" in it,
-        # like "1 how imported cars changed the car industry in US at 15.24"
-        imported_n_name = raw_import_title.split(constant.Strings.IMPORTED, maxsplit=1)
-        # the other half of imported, which is item's title
-        name = imported_n_name[-1].strip()
+        # remove imported from name
+        name = raw_import_title.replace(constant.Strings.IMPORTED + ' ', '')
     else:
-        # input hasn't started with word "imported", so don't split any thing the whole string is the title
-        # note: the item's title might actually start with the word "imported" and that'd just be a bug in the logic
+        # input doesn't have word "imported", so the whole string is the title
+        # note: the item's title might actually have the word "imported" and that'd just be a bug in the logic
         #   with this method of input, it is inevitable
         name = raw_import_title
 
-    return count, imported, name, price
+    return count, imported, name, '', price
+
+
+def parse_item_from_json(raw: dict) -> (int, bool, str, str, float):
+    try:
+        count = int(raw['count'])
+    except (KeyError, ValueError):
+        count = 1
+
+    try:
+        imported = bool(int(raw['imported']))
+    except (KeyError, ValueError):
+        imported = False
+
+    try:
+        name = raw['name']
+    except KeyError:
+        name = ''
+
+    try:
+        category_str = raw['category']
+    except KeyError:
+        category_str = ''
+
+    try:
+        price = float(raw['price'])
+    except (KeyError, ValueError):
+        price = 0.0
+
+    return count, imported, name, category_str, price

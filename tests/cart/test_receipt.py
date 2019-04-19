@@ -3,6 +3,8 @@ import unittest
 from product.categories import Book, Food, Medical, Basic
 from cart.receipt import Receipt
 
+from interface.input import file_reader
+
 
 class TestReceipt(unittest.TestCase):
     def test_total_tax(self):
@@ -145,6 +147,33 @@ class TestReceiptPrint(unittest.TestCase):
             'total sale taxes': 0
         }
         self.assertEqual(expected, receipt_empty.__dict__())
+
+
+class TestCart(unittest.TestCase):
+    def test_populate(self):
+        items_data = file_reader('input_set_1.txt')
+        receipt = Receipt()
+        receipt.populate(items_data)
+
+        expected = "1 book: 12.49\n1 music CD: 16.49\n1 chocolate bar: 0.85\nSales Taxes: 1.50\nTotal: 29.83"
+        self.assertEqual(expected, str(receipt))
+
+        items_data = file_reader('input_set_2.txt')
+        receipt = Receipt()
+        receipt.populate(items_data)
+
+        expected = "1 imported box of chocolates: 10.50\n1 imported bottle of perfume: 54.65\nSales Taxes: 7.65" \
+                   "\nTotal: 65.15"
+        self.assertEqual(expected, str(receipt))
+
+        items_data = file_reader('input_set_3.txt')
+        receipt = Receipt()
+        receipt.populate(items_data)
+
+        expected = "1 imported bottle of perfume: 32.19\n1 bottle of perfume: 20.89" \
+                   "\n1 packet of headache pills: 9.75" \
+                   "\n1 imported box of chocolates: 11.85\nSales Taxes: 6.70\nTotal: 74.68"
+        self.assertEqual(expected, str(receipt))
 
 
 if __name__ == '__main__':
